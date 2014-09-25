@@ -3,10 +3,13 @@
 class Mastermind
   @@colors = [:white, :yellow, :pink, :purple, :orange, :turquoise]
 
-  @@scores = (0..4).map{|n| [:red] * n}.
-    product((0..4).map{|n| [:white] * n}).
-    map(&:flatten).
-    select{|x| x.size <= 4}
+  # Create all valid scores, i.e., different numbers of red/white.
+
+  @@scores = (0..4).map  do |r|
+    (0..(4-r)).map do |w|
+      ([:red] * r) + ([:white] * w)
+    end
+  end.flatten(1)
 
   @@all_codes = @@colors.permutation(4).to_a
 
