@@ -15,7 +15,6 @@ class Mastermind
 
   def initialize(use_all_codes)
     @codes = @@all_codes
-    @last_guess = nil
     @use_all_codes = use_all_codes
   end
 
@@ -28,12 +27,12 @@ class Mastermind
   end
 
   def make_guess
-    @last_guess = case
-      when !@last_guess
+    case
+      when @codes == @@all_codes
         # This saves time on the first guess.
         random_code(@codes)
       when @codes.size == 1
-        # This case is only necessary if we're making guess from
+        # This case is only necessary if we're making guesses from
         # @@all_codes instead of @codes.
         @codes[0]
       else
@@ -84,6 +83,8 @@ class Mastermind
     end
     score
   end
+
+  # Return the codes for which the given guess gets the given score.
 
   def filter_codes(codes, guess, score)
     codes.select do |code|
