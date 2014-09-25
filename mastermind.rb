@@ -39,14 +39,9 @@ class Mastermind
         # Choosing a guess from all possible codes may narrow down the
         # possibilities later.
         (@use_all_codes ? @@all_codes : @codes).min_by do |guess|
-          score_count = 0
-          @@scores.each do |score|
-            filtered_count = filter_codes(@codes, guess, score).size
-            if filtered_count > score_count
-              score_count = filtered_count
-            end
-          end
-          score_count
+          @@scores.map do |score|
+            filter_codes(@codes, guess, score).size
+          end.max
         end
     end
   end
