@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require "ruby-debug"
-
 class Mastermind
   @@colors = [:white, :yellow, :pink, :purple, :orange, :turquoise]
 
