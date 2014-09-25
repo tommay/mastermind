@@ -36,11 +36,9 @@ class Mastermind
         # @@all_codes instead of @codes.
         @codes[0]
       else
-        code_count = nil
-        next_guess = nil
-        # Choosing a guess fron all possible codes may narrow down the
+        # Choosing a guess from all possible codes may narrow down the
         # possibilities later.
-        (@use_all_codes ? @@all_codes : @codes).shuffle.each do |guess|
+        (@use_all_codes ? @@all_codes : @codes).min_by do |guess|
           score_count = 0
           @@scores.each do |score|
             filtered_count = filter_codes(@codes, guess, score).size
@@ -48,13 +46,9 @@ class Mastermind
               score_count = filtered_count
             end
           end
-          if !code_count || score_count < code_count
-            code_count = score_count
-            next_guess = guess
-          end
+          score_count
         end
-        next_guess
-      end
+    end
   end
 
   def set_score(guess, score)
