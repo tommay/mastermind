@@ -67,19 +67,19 @@ class Mastermind
     guess = guess.clone
     score = []
     # Red matches.
-    guess.each_index.to_a.reverse.each do |i|
+    guess.each_index do |i|
       if guess[i] == code[i]
         score << :red
-        guess.delete_at(i)
-        code.delete_at(i)
+        guess[i] = nil
+        code[i] = nil
       end
     end
     # White matches.
     guess.each do |color|
-      i = code.index(color)
+      i = color && code.index(color)
       if i
-        code.delete_at(i)
         score << :white
+        code[i] = nil
       end
     end
     score
