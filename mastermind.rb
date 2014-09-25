@@ -20,7 +20,7 @@ class Mastermind
   end
 
   def random_code(codes = @@all_codes)
-    codes[rand(codes.size)]
+    codes.sample
   end
 
   def size
