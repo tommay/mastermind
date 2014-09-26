@@ -40,7 +40,7 @@ class Mastermind
         # possibilities later.
         (@use_all_codes ? @@all_codes : @codes).min_by do |guess|
           @@scores.map do |score|
-            filter_codes(@codes, guess, score).size
+            new_for_guess_and_score(guess, score).size
           end.max
         end
     end
