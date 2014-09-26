@@ -13,9 +13,9 @@ class Mastermind
 
   @@all_codes = @@colors.permutation(4).to_a
 
-  def initialize(use_all_codes)
-    @codes = @@all_codes
+  def initialize(use_all_codes = true, codes = @@all_codes)
     @use_all_codes = use_all_codes
+    @codes = codes
   end
 
   def random_code(codes = @@all_codes)
@@ -103,14 +103,15 @@ class GamePlayer
 
   def play_games(n = 10)
     t = Time.now
-    total_turns = 0
-    n.times do
-      total_turns += play_a_game(Mastermind.new(@use_all_codes))
-      STDOUT.write(".")
+    turns = (1..n).map do
+      play_a_game(Mastermind.new(@use_all_codes)).tap do
+        STDOUT.write(".")
+      end
     end
     puts
-    puts total_turns.to_f / n
-    puts Time.now - t
+    puts turns.reduce(&:+).to_f / n
+    puts turns.minmax
+    puts (Time.now - t) / n
     nil
   end
 
