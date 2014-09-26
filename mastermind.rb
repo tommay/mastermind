@@ -46,8 +46,8 @@ class Mastermind
     end
   end
 
-  def set_score(guess, score)
-    @codes = filter_codes(@codes, guess, score)
+  def new_for_guess_and_score(guess, score)
+    Mastermind.new(@use_all_codes, filter_codes(@codes, guess, score))
   end
 
   def compute_score(code, guess)
@@ -90,7 +90,7 @@ puts code.inspect
 loop do
   guess = m.make_guess
   score = m.compute_score(code, guess)
-  m.set_score(guess, score)
+  m.new_for_guess_and_score(guess, score)
   puts "#{guess.inspect} => #{score.inspect} => #{m.size}"
   break if guess == code
 end
@@ -125,7 +125,7 @@ class GamePlayer
         return turns
       end
       score = m.compute_score(code, guess)
-      m.set_score(guess, score)
+      m = m.new_for_guess_and_score(guess, score)
     end
   end
 end
