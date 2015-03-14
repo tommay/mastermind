@@ -1,24 +1,30 @@
 #!/usr/bin/env ruby
 
 class Mastermind
-  @@colors = [:white, :yellow, :pink, :purple, :orange, :turquoise]
+  COLORS = [:white, :yellow, :pink, :purple, :orange, :turquoise]
 
   # Create all valid scores, i.e., different numbers of red/white.
 
-  @@scores = (0..4).map  do |r|
+  SCORES = (0..4).map  do |r|
     (0..(4-r)).map do |w|
       ([:red] * r) + ([:white] * w)
     end
   end.flatten(1)
 
-  @@all_codes = @@colors.permutation(4).to_a
+  CODES = COLORS.permutation(4).to_a
 
-  def initialize(use_all_codes = true, codes = @@all_codes)
+  # use_all_codes: true means make guesses from CODES which contains
+  # all possible codes.  It remains to be seen whether having a larger
+  # set of guesses makes solving faster.  False means make guesses
+  # only from codes.  codes: an Array of all codes that are possible
+  # given the previous guesses and scores.
+  #
+  def initialize(use_all_codes = true, codes = CODES)
     @use_all_codes = use_all_codes
     @codes = codes
   end
 
-  def random_code(codes = @@all_codes)
+  def random_code(codes = CODES)
     codes.sample
   end
 
@@ -28,18 +34,20 @@ class Mastermind
 
   def make_guess
     case
-      when @codes == @@all_codes
-        # This saves time on the first guess.
+      when @codes == CODES
+        # This saves time on the first guess.  It's unknown whether
+        # some guesses might be better, e.g., guesses with more or
+        # less duplicate colors.
         random_code(@codes)
       when @codes.size == 1
         # This case is only necessary if we're making guesses from
-        # @@all_codes instead of @codes.
+        # CODES instead of @codes.
         @codes[0]
       else
         # Choosing a guess from all possible codes may narrow down the
         # possibilities later.
-        (@use_all_codes ? @@all_codes : @codes).min_by do |guess|
-          @@scores.map do |score|
+        (@use_all_codes ? CODES : @codes).min_by do |guess|
+          SCORES.map do |score|
             new_for_guess_and_score(guess, score).size
           end.max
         end
@@ -96,6 +104,8 @@ loop do
 end
 end
 
+# GamePlayer.new.play_a_game(Mastermind.new)
+#
 class GamePlayer
   def initialize(use_all_codes = true)
     @use_all_codes = use_all_codes
