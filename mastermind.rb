@@ -29,12 +29,11 @@ class Mastermind
   CODES = Mastermind.combinations(4, COLORS)
 
   # use_all_codes: true means make guesses from CODES which contains
-  # all possible codes.  It remains to be seen whether having a larger
-  # set of guesses makes solving faster, i.e., fewer guesses.  False
-  # means make guesses only from codes.  codes: an Array of all codes
-  # that are possible given the previous guesses and scores.  Tests on
-  # one-ply searches show using all codes on average takes more
-  # guesses.
+  # all possible codes.  This requires more guesses with the one-ply
+  # search so it's a lose.  False means make guesses only from codes.
+  # codes: an Array of all codes that are possible given the previous
+  # guesses and scores.  Tests on one-ply searches show using all
+  # codes on average takes more guesses.
   #
   def initialize(use_all_codes = true, codes = CODES)
     @use_all_codes = use_all_codes
