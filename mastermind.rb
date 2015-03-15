@@ -11,7 +11,22 @@ class Mastermind
     end
   end.flatten(1)
 
-  CODES = COLORS.permutation(4).to_a
+  # Returns all combinations of length size of the elements in the
+  # array.  Each combination will use each element zero to size times.
+  # If size is zero the result is [[]] because there is one combination
+  # of zero elements and it is empty.
+
+  def self.combinations(size, array)
+    accum = [[]]
+    size.times do
+      accum = accum.flat_map do |c|
+        array.map{|e| c + [e]}
+      end
+    end
+    accum
+  end
+
+  CODES = Mastermind.combinations(4, COLORS)
 
   # use_all_codes: true means make guesses from CODES which contains
   # all possible codes.  It remains to be seen whether having a larger
