@@ -34,23 +34,23 @@ class Mastermind
 
   def make_guess
     case
-      when @codes == CODES
-        # This saves time on the first guess.  It's unknown whether
-        # some guesses might be better, e.g., guesses with more or
-        # less duplicate colors.
-        Mastermind.random_code(@codes)
-      when @codes.size == 1
-        # This case is only necessary if we're making guesses from
-        # CODES instead of @codes.
-        @codes[0]
-      else
-        # Choosing a guess from all possible codes may narrow down the
-        # possibilities later.
-        (@use_all_codes ? CODES : @codes).min_by do |guess|
-          SCORES.map do |score|
-            new_for_guess_and_score(guess, score).size
-          end.max
-        end
+    when @codes == CODES
+      # This saves time on the first guess.  It's unknown whether
+      # some guesses might be better, e.g., guesses with more or
+      # less duplicate colors.
+      Mastermind.random_code(@codes)
+    when @codes.size == 1
+      # This case is only necessary if we're making guesses from
+      # CODES instead of @codes.
+      @codes[0]
+    else
+      # Choosing a guess from all possible codes may narrow down the
+      # possibilities later.
+      (@use_all_codes ? CODES : @codes).min_by do |guess|
+        SCORES.map do |score|
+          new_for_guess_and_score(guess, score).size
+        end.max
+      end
     end
   end
 
