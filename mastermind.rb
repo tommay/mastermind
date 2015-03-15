@@ -24,7 +24,7 @@ class Mastermind
     @codes = codes
   end
 
-  def random_code(codes = CODES)
+  def self.random_code(codes = CODES)
     codes.sample
   end
 
@@ -38,7 +38,7 @@ class Mastermind
         # This saves time on the first guess.  It's unknown whether
         # some guesses might be better, e.g., guesses with more or
         # less duplicate colors.
-        random_code(@codes)
+        Mastermind.random_code(@codes)
       when @codes.size == 1
         # This case is only necessary if we're making guesses from
         # CODES instead of @codes.
@@ -55,10 +55,10 @@ class Mastermind
   end
 
   def new_for_guess_and_score(guess, score)
-    Mastermind.new(@use_all_codes, filter_codes(@codes, guess, score))
+    Mastermind.new(@use_all_codes, Mastermind.filter_codes(@codes, guess, score))
   end
 
-  def compute_score(code, guess)
+  def self.compute_score(code, guess)
     code = code.clone
     guess = guess.clone
     score = []
@@ -83,21 +83,21 @@ class Mastermind
 
   # Return the codes for which the given guess gets the given score.
 
-  def filter_codes(codes, guess, score)
+  def self.filter_codes(codes, guess, score)
     codes.select do |code|
-      compute_score(code, guess) == score
+      Mastermind.compute_score(code, guess) == score
     end
   end
 end
 
 if false
 m = Mastermind.new
-code = m.random_code
+code = Mastermind.random_code
 puts code.inspect
 
 loop do
   guess = m.make_guess
-  score = m.compute_score(code, guess)
+  score = Mastermind.compute_score(code, guess)
   m.new_for_guess_and_score(guess, score)
   puts "#{guess.inspect} => #{score.inspect} => #{m.size}"
   break if guess == code
@@ -126,7 +126,7 @@ class GamePlayer
   end
 
   def play_a_game(m)
-    code = m.random_code
+    code = Mastermind.random_code
     turns = 0
     loop do
       turns += 1
@@ -134,7 +134,7 @@ class GamePlayer
       if guess == code
         return turns
       end
-      score = m.compute_score(code, guess)
+      score = Mastermind.compute_score(code, guess)
       m = m.new_for_guess_and_score(guess, score)
     end
   end
