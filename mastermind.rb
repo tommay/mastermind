@@ -30,9 +30,11 @@ class Mastermind
 
   # use_all_codes: true means make guesses from CODES which contains
   # all possible codes.  It remains to be seen whether having a larger
-  # set of guesses makes solving faster.  False means make guesses
-  # only from codes.  codes: an Array of all codes that are possible
-  # given the previous guesses and scores.
+  # set of guesses makes solving faster, i.e., fewer guesses.  False
+  # means make guesses only from codes.  codes: an Array of all codes
+  # that are possible given the previous guesses and scores.  Tests on
+  # one-ply searches show using all codes on average takes more
+  # guesses.
   #
   def initialize(use_all_codes = true, codes = CODES)
     @use_all_codes = use_all_codes
@@ -59,8 +61,10 @@ class Mastermind
       # CODES instead of @codes.
       @codes[0]
     else
+      # This chooses the guess that gives us (for the worst case
+      # score) the fewest possibile codes for the next round.
       # Choosing a guess from all possible codes may narrow down the
-      # possibilities later.
+      # possibilities later.  This is a one-ply search.
       (@use_all_codes ? CODES : @codes).min_by do |guess|
         SCORES.map do |score|
           new_for_guess_and_score(guess, score).size
@@ -105,21 +109,8 @@ class Mastermind
   end
 end
 
-if false
-m = Mastermind.new
-code = Mastermind.random_code
-puts code.inspect
-
-loop do
-  guess = m.make_guess
-  score = Mastermind.compute_score(code, guess)
-  m.new_for_guess_and_score(guess, score)
-  puts "#{guess.inspect} => #{score.inspect} => #{m.size}"
-  break if guess == code
-end
-end
-
 # GamePlayer.new.play_a_game(Mastermind.new)
+# GamePlayer.new.play_games(10)
 #
 class GamePlayer
   def initialize(use_all_codes = true)
